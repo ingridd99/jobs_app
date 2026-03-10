@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  #API service - my FastAPI app
+  api:
+    #build the tocker image using the Dockerfile from the current foldeer
+    build: .
+    #expose the 8000 port from the container on the 8000 port of the laptop
+    ports:
+      - "8000:8000"
+    #the docker says that the api service depends on db
+    #starting the db when the compose runs
+    depends_on:
+      - db
+
+  #db service PostgreSQL
+  db:
+    #using the official postgres image
+    image: postgres
+
+    #env vars needed to init the db
+    environment:
+      POSTGRES_USER: jobs
+      POSTGRES_PASSWORD: jobs
+      POSTGRES_DB: jobsdb
+
+    #expose the PostgreSQL for local access
+    ports:
+      - "5432:5432"
