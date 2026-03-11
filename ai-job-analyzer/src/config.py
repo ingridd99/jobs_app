@@ -14,4 +14,11 @@ DATABASE_URL = "postgresql://jobs:jobs@localhost:5432/jobsdb"
 engine = create_engine(DATABASE_URL)
 
 # SessionLocal creează sesiuni DB pentru fiecare request.
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(
+    #modificările NU se salvează automat în DB
+    autocommit=False, 
+    #flush = trimite modificările din memorie către baza de date, dar fără commit.
+    autoflush=False, 
+    #connects the session to the database engine.
+    bind=engine
+    )

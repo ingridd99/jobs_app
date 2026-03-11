@@ -17,11 +17,18 @@ class Job(Base):
     # Cheia primară a tabelului
     id = Column(Integer, primary_key=True, index=True)
 
+    # ID-ul jobului din sursa externă, ex. Adzuna
+    external_id = Column(String, unique=True, index=True)
+
+    # Sursa din care a venit jobul
+    source = Column(String)
+
     # Titlul jobului
     title = Column(String)
-
     # Compania
     company = Column(String)
-
     # Locația jobului
     location = Column(String)
+
+    # Păstrăm și descrierea, pentru viitorul RAG / LLM
+    description = Column(String)
