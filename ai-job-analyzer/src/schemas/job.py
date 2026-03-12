@@ -6,6 +6,7 @@
 # Importăm BaseModel din Pydantic.
 # Pydantic este folosit de FastAPI pentru validarea datelor primite în request.
 from pydantic import BaseModel
+# În Python 3.9 folosim Optional pentru câmpurile care pot lipsi / pot fi None.
 from typing import Optional
 
 
