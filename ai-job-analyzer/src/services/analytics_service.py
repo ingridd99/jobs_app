@@ -1,62 +1,54 @@
-# Importăm Counter pentru a număra aparițiile skill-urilor.
-from collections import Counter
+from src.db.dynamodb import get_dynamodb_table
 
-# Importăm Session pentru query-uri DB.
-from sqlalchemy.orm import Session
+# The skills we want to search for in job descriptions.
+SKILL_KEYWORDS = [
+    "python", "java", "javascript", "typescript", "aws", "docker",
+    "kubernetes", "react", "sql", "terraform", "go", "rust",
+    "node", "angular", "azure", "gcp", "linux", "git",
+]
 
-# Importăm modelul Job.
-from src.db.models import Job
+table = get_dynamodb_table()
 
-def get_skill_counts(db: Session):
+def get_skill_counts() -> list:
     """
-    Analizează toate joburile din baza de date și numără de câte ori
-    apar anumite skill-uri în title și description.
+    Counts how many jobs mention each skill in their title or description.
+
+    We scan ALL jobs and check each one against our keyword list.
+
+    In PostgreSQL we used SQL LIKE queries.
+    In DynamoDB there's no full-text search, so we do it in Python.
+    (Later, we'll use Athena for proper SQL analytics over S3 data.)
     """
 
-    # Lista de skill-uri pe care vrem să le urmărim.
-    # Pentru început folosim o listă fixă, relevantă pentru rolurile tale.
-    tracked_skills = [
-        "python",
-        "aws",
-        "docker",
-        "kubernetes",
-        "sql",
-        "nosql",
-        "fastapi",
-        "django",
-        "flask",
-        "git",
-        "ci/cd",
-        "lambda",
-        "s3",
-        "dynamodb",
-        "ec2",
-        "rag",
-        "llm",
-        "genai",
-        "prompt engineering"
-    ]
+    # Scan all items — for analytics we need to look at every job.
+    # We only fetch the fields we need (ProjectionExpression) to save bandwidth.
+    response = table.scan(
+        # Only return title and description fields, not all fields.
+        ProjectionExpression="title, description"
+    )
+    items = response.get("Items", [])
 
-    # Luăm toate joburile din baza de date.
-    jobs = db.query(Job).all()
+    # DynamoDB scan() returns max 1MB of data per call.
+    # If there's more data, it returns a "LastEvaluatedKey" and we must call again.
+    # This loop handles pagination — it keeps scanning until all items are read.
+    while "LastEvaluatedKey" in response:
+        response = table.scan(
+            ProjectionExpression="title, description",
+            ExclusiveStartKey=response["LastEvaluatedKey"]
+        )
+        items.extend(response.get("Items", []))
 
-    # Counter ne ajută să numărăm ușor aparițiile.
-    skill_counts = Counter()
-
-    # Parcurgem fiecare job.
-    for job in jobs:
-        # Luăm title și description.
-        # Dacă vreunul este None, folosim string gol.
-        title = (job.title or "").lower()
-        description = (job.description or "").lower()
-
-        # Combinăm cele două câmpuri într-un singur text.
-        full_text = f"{title} {description}"
-
-        # Verificăm pentru fiecare skill dacă apare în text.
-        for skill in tracked_skills:
-            if skill in full_text:
+    # Count each skill keyword across all jobs.
+    skill_counts = {}
+    for skill in SKILL_KEYWORDS:
+        skill_counts[skill] = 0
+        for item in items:
+            text = (item.get("title", "") + " " + item.get("description", "")).lower()
+            if skill in text:
                 skill_counts[skill] += 1
 
-    # Convertim Counter în dicționar simplu și îl returnăm.
-    return dict(skill_counts)
+    # Return as a sorted list of dicts — most mentioned skills first.
+    result = [{"skill": skill, "count": count} for skill, count in skill_counts.items()]
+    result.sort(key=lambda x: x["count"], reverse=True)
+
+    return result

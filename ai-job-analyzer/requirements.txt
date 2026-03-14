@@ -1,17 +1,7 @@
-#backend framework used to develop the API
 fastapi
-
-#the server that runs locally the FastAPI app
 uvicorn
-
-#ORM / toolkit for SQL database
 sqlalchemy
-
-#PostgreSQL driver for python
 psycopg2-binary
-
-#For HTTPs requests to external APIs
-requests
-
-#for env vars from .env files
 python-dotenv
+requests
+boto3

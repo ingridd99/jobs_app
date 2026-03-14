@@ -16,3 +16,17 @@ venv/
 # IDE
 .vscode/
 .idea/
+
+# AWS credentials
+.aws/
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+.terraform/
+terraform.tfstate
+.terraform.lock.hcl
+
+#bruno
+Job Analyser/

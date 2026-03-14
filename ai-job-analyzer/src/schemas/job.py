@@ -10,12 +10,16 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-# Această clasă descrie forma datelor pe care le așteptăm
-# când cineva vrea să creeze manual un job nou prin POST /jobs.
 class JobCreate(BaseModel):
+    # These two fields are needed for DynamoDB primary key
+    external_id: str
+    source: str
+
+    # Job details
     title: str
-    company: str
-    location: str
+    company: Optional[str] = ""
+    location: Optional[str] = ""
+    description: Optional[str] = ""
 
 # Această schemă descrie cum arată un job returnat de API.
 class JobResponse(BaseModel):
