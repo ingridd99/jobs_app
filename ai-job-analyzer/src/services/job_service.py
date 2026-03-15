@@ -4,6 +4,9 @@ from src.db.dynamodb import get_dynamodb_table
 # We still use the same Pydantic schema for validation.
 from src.schemas.job import JobCreate
 
+# import S3 client
+from src.clients.s3_client import save_raw_to_s3
+
 from typing import Optional
 
 # boto3 has special exceptions we might need to handle.
@@ -88,6 +91,10 @@ def ingest_jobs_from_adzuna(what: str = "python developer", country: str = "gb")
     # Fetch raw jobs from Adzuna API.
     raw_jobs = fetch_adzuna_jobs(what=what, country=country)
 
+    # Save raw response to S3 FIRST (before any parsing).
+    # This way we always have the original data, even if parsing fails.
+    s3_path = save_raw_to_s3(raw_data=raw_jobs, source="adzuna", search_term=what)
+
     inserted = 0
     skipped = 0
 
@@ -120,4 +127,5 @@ def ingest_jobs_from_adzuna(what: str = "python developer", country: str = "gb")
         "fetched": len(raw_jobs),
         "inserted": inserted,
         "skipped": skipped,
+        "s3_path": s3_path
     }

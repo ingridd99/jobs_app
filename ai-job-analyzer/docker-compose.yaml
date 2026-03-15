@@ -8,6 +8,7 @@ services:
     environment:
       - AWS_REGION=us-east-1
       - DYNAMODB_TABLE_NAME=job-analyzer-jobs-dev
+      - S3_BUCKET_NAME=job-analyzer-data-lake-dev-ingr
       - ADZUNA_APP_ID=${ADZUNA_APP_ID}
       - ADZUNA_APP_KEY=${ADZUNA_APP_KEY}
     volumes:

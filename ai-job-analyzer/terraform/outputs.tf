@@ -12,3 +12,25 @@ output "dynamodb_table_arn" {
   description = "The ARN of the DynamoDB jobs table"
   value       = aws_dynamodb_table.jobs.arn
 }
+
+# S3 outputs (new)
+output "s3_bucket_name" {
+  description = "The name of the S3 data lake bucket"
+  value       = aws_s3_bucket.data_lake.id
+}
+
+output "s3_bucket_arn" {
+  description = "The ARN of the S3 data lake bucket"
+  value       = aws_s3_bucket.data_lake.arn
+}
+
+# Lambda outputs (new)
+output "lambda_function_name" {
+  description = "The name of the ingestion Lambda function"
+  value       = aws_lambda_function.ingest.function_name
+}
+
+output "lambda_function_arn" {
+  description = "The ARN of the ingestion Lambda function"
+  value       = aws_lambda_function.ingest.arn
+}

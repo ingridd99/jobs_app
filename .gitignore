@@ -21,12 +21,15 @@ venv/
 .aws/
 
 # Terraform
-terraform/.terraform/
-terraform/*.tfstate
-terraform/*.tfstate.backup
-.terraform/
-terraform.tfstate
+ai-job-analyzer/terraform/.terraform/
+ai-job-analyzer/terraform/*.tfstate
+ai-job-analyzer/terraform/*.tfstate.backup
 .terraform.lock.hcl
+terraform.tfvars
 
 #bruno
 Job Analyser/
+
+#lambda
+ai-job-analyzer/src/lambda/package/
+ai-job-analyzer/src/lambda/lambda_function.zip

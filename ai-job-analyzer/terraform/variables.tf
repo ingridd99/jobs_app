@@ -16,3 +16,17 @@ variable "environment" {
   type        = string
   default     = "dev"
 }
+
+# Adzuna API credentials for Lambda
+# "sensitive = true" means Terraform won't show the value in logs.
+variable "adzuna_app_id" {
+  description = "Adzuna API App ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "adzuna_app_key" {
+  description = "Adzuna API App Key"
+  type        = string
+  sensitive   = true
+}
