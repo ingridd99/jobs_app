@@ -40,3 +40,25 @@ output "api_gateway_url" {
   description = "The base URL of the API Gateway"
   value       = "https://${aws_api_gateway_rest_api.job_analyzer.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}"
 }
+
+# Cognito outputs (new)
+output "cognito_user_pool_id" {
+  description = "Cognito User Pool ID"
+  value       = aws_cognito_user_pool.main.id
+}
+
+output "cognito_user_pool_arn" {
+  description = "Cognito User Pool ARN"
+  value       = aws_cognito_user_pool.main.arn
+}
+
+output "cognito_client_id" {
+  description = "Cognito Client ID (use for sign-up/login)"
+  value       = aws_cognito_user_pool_client.main.id  # Changed from client_id to id
+}
+
+output "cognito_client_secret" {
+  description = "Cognito Client Secret (keep secret!)"
+  value       = aws_cognito_user_pool_client.main.client_secret
+  sensitive   = true
+}

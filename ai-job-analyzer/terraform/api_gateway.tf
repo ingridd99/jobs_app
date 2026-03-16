@@ -141,7 +141,15 @@ resource "aws_api_gateway_method" "jobs_get" {
   rest_api_id   = aws_api_gateway_rest_api.job_analyzer.id
   resource_id   = aws_api_gateway_resource.jobs.id
   http_method   = "GET"
-  authorization = "NONE"
+  # Require Cognito authentication
+  authorization = "COGNITO_USER_POOLS"
+  # Use our Cognito authorizer
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+  
+  # Tell API Gateway that Authorization header is required
+  request_parameters = {
+    "method.request.header.Authorization" = true
+  }
 }
 
 # POST /jobs method
@@ -149,7 +157,15 @@ resource "aws_api_gateway_method" "jobs_post" {
   rest_api_id   = aws_api_gateway_rest_api.job_analyzer.id
   resource_id   = aws_api_gateway_resource.jobs.id
   http_method   = "POST"
-  authorization = "NONE"
+  # Require Cognito authentication
+  authorization = "COGNITO_USER_POOLS"
+  # Use our Cognito authorizer
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+  
+  # Tell API Gateway that Authorization header is required
+  request_parameters = {
+    "method.request.header.Authorization" = true
+  }
 }
 
 # /analytics resource
@@ -172,7 +188,15 @@ resource "aws_api_gateway_method" "analytics_skills_get" {
   rest_api_id   = aws_api_gateway_rest_api.job_analyzer.id
   resource_id   = aws_api_gateway_resource.analytics_skills.id
   http_method   = "GET"
-  authorization = "NONE"
+  # Require Cognito authentication
+  authorization = "COGNITO_USER_POOLS"
+  # Use our Cognito authorizer
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+
+  # Tell API Gateway that Authorization header is required
+  request_parameters = {
+    "method.request.header.Authorization" = true
+    }
 }
 
 # ─────────────────────────────────────────────
