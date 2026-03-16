@@ -34,3 +34,9 @@ output "lambda_function_arn" {
   description = "The ARN of the ingestion Lambda function"
   value       = aws_lambda_function.ingest.arn
 }
+
+# API Gateway outputs (new)
+output "api_gateway_url" {
+  description = "The base URL of the API Gateway"
+  value       = "https://${aws_api_gateway_rest_api.job_analyzer.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}"
+}

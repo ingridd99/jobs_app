@@ -33,3 +33,6 @@ Job Analyser/
 #lambda
 ai-job-analyzer/src/lambda/package/
 ai-job-analyzer/src/lambda/lambda_function.zip
+
+ai-job-analyzer/src/lambdas/api/package
+ai-job-analyzer/src/lambdas/api/lambda_function.zip
